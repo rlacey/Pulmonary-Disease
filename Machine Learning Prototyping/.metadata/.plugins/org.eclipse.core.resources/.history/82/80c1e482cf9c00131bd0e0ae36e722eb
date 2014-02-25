@@ -1,0 +1,25 @@
+package utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Dictionary {
+	
+	private ArrayList<String> tokens;
+	private Map<String, Integer> dictionary;
+	
+	public Dictionary(ArrayList<String> tokens) {
+		this.tokens = tokens;
+		dictionary = new HashMap<String, Integer>();
+		create();
+	}
+	
+	private void create() {		
+		for(String s: tokens){
+			if (!dictionary.containsKey(s)) {
+				dictionary.put(s, 0);
+			}			
+		} 
+	}
+}

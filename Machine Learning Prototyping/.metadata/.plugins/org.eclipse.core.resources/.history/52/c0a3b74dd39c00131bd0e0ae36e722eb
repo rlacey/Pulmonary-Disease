@@ -1,0 +1,18 @@
+package Main;
+
+import java.util.ArrayList;
+
+import utils.Tokenizer;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Tokenizer tokenizer = new Tokenizer("train-tweet", true);
+		ArrayList<String> tokens = tokenizer.getTokens();
+//		for(String s: tokens){
+//			  System.out.println(s);
+//		}
+	}
+
+}

@@ -1,0 +1,46 @@
+package utils;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+public class Tokenizer {
+	
+	private String filename;
+	private boolean splitPunctuation;
+	private ArrayList<String> tokens;
+	
+	public Tokenizer(String filename, boolean splitPunctuation) {
+		this.filename = filename;
+		this.splitPunctuation = splitPunctuation;
+		tokens = new ArrayList<String>();
+	}
+	
+	public ArrayList<String> tokenize () {
+		try(BufferedReader br = new BufferedReader(new FileReader("src/text/" + filename + ".txt"))) {		
+	      String line = br.readLine();
+	      while (line != null) {
+	    	  parseLine(line);
+	    	  line = br.readLine();
+	      }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return tokens;		
+	}
+		
+	private void parseLine(String line) {		
+		if (splitPunctuation) {
+			String[] splitString = line.split("[\\p{Punct}\\s]+");
+			for (String s : splitString) {
+				tokens.add(s);
+			}
+		} else {
+			StringTokenizer st = new StringTokenizer(line);
+			while (st.hasMoreTokens()) {
+				tokens.add(st.nextToken());
+			}
+		}					
+	}	
+}
