@@ -1,55 +1,33 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 public class FeatureMatrix {
 	
-	private Tokenizer tokenizer;
-	private Dictionary dictionary;
-	ArrayList<String> keys;
-	int[][] matrix;
-	int rows;
-	int cols;
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public FeatureMatrix(String filename, Dictionary dictionary) {
-		this.tokenizer = new Tokenizer(filename, true);
-		this.dictionary = dictionary;
-		keys = new ArrayList(Arrays.asList(dictionary.keys()));
-		create();
-	}
-		
-	private void create() {
-		rows = tokenizer.countLines();
-		cols = dictionary.size();
-		matrix = new int[rows][cols];
-		int index = 0;
-		for(String line: tokenizer.lines()) {
-			String[] splitString = line.split("[\\p{Punct}\\s]+");
-			for (String s : splitString) {
-				if (keys.contains(s)) {
-					matrix[index][keys.indexOf(s)] = 1;					
-				}				
+	public static RealMatrix construct(String filename, ArrayList<String> tokens) {
+		RealMatrix matrix = MatrixUtils.createRealMatrix(Parser.countLines(filename), tokens.size());
+		int position = 0;
+		try (BufferedReader br = new BufferedReader(new FileReader("src/text/" + filename + ".txt"))) {
+			String line = br.readLine();
+			while (line != null) {				
+				if (!line.trim().isEmpty()) {
+					String[] splitString = Parser.parseLine(line);
+					for (String s : splitString) {
+						if (tokens.contains(s)) { matrix.setEntry(position, tokens.indexOf(s), 1); }
+					}
+					position++;
+				}
+				line = br.readLine();
 			}
-			index++;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return matrix;		
 	}
-	
-	public int[][] getMatrix() {
-		return matrix;
-	}
-	
-	public int rows() {
-		return rows;
-	}
-	
-	public int cols() {
-		return cols;
-	}
-	
-	public int get(int x, int y) {
-		return matrix[x][y];
-	}
-	
+
 }

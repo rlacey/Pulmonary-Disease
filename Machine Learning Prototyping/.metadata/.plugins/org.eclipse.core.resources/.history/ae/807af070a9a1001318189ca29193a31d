@@ -1,0 +1,18 @@
+package Algorithms;
+
+import java.util.ArrayList;
+
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+
+import utils.LinearSeparator;
+
+public class Perceptron {
+	
+	public static LinearSeparator train(RealMatrix featureMatrix, ArrayList<String> labels) {
+		RealMatrix theta = MatrixUtils.createRealMatrix(1,featureMatrix.BLAH);
+		return null;
+		
+	}
+
+}

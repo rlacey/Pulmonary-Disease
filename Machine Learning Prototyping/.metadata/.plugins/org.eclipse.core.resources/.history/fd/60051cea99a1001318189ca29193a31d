@@ -1,0 +1,31 @@
+package utils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Parser {
+	
+	public static ArrayList<String> tokenize(String filename) {
+		return generateTokens(filename);		
+	}
+	
+	private static ArrayList<String> generateTokens(String filename) {
+		ArrayList<String> tokens = new ArrayList<String>();
+		try(BufferedReader br = new BufferedReader(new FileReader("src/text/" + filename + ".txt"))) {		
+			String line = br.readLine();
+			while (line != null) {
+				tokens = parseLine(tokens, line);				
+				line = br.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	private static parseLine(ArrayList<String> tokens, String line) {
+		
+	}
+
+}

@@ -1,0 +1,68 @@
+package utils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+
+public class FeatureMatrix {
+	
+	private String filename;
+	private Tokenizer tokenizer;
+	private ArrayList<String> tokens;
+	private RealMatrix matrix;	
+	private HashMap<String, Integer> dictionary;
+	private int position;
+	
+	public FeatureMatrix(String filename) {
+		this.filename = filename;
+		this.tokenizer = new Tokenizer(filename, true);
+		this.tokens = tokenizer.getTokens();
+		this.matrix = MatrixUtils.createRealMatrix(linesInFile(), tokens.size());		
+		this.dictionary = new HashMap<String, Integer>();
+		this.position = 0;
+		populateDictionary();
+	}
+	
+	private void populateDictionary() {
+		
+	}
+	
+	private int linesInFile() {
+		int numberOfLines = 0;
+		try(BufferedReader br = new BufferedReader(new FileReader("src/text/" + filename + ".txt"))) {		
+		      String line = br.readLine();
+		      while (line != null) {
+		    	  if (line.trim() != "") {
+		    		  numberOfLines++;
+		    	  }
+		    	  line = br.readLine();
+		      }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		return numberOfLines;
+	}
+	
+	public int[][] getMatrix() {
+		return matrix;
+	}
+	
+	public int rows() {
+		return rows;
+	}
+	
+	public int cols() {
+		return cols;
+	}
+	
+	public int get(int x, int y) {
+		return matrix[x][y];
+	}
+	
+}

@@ -1,0 +1,52 @@
+package utils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Set;
+
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+
+public class FeatureMatrix {
+
+	private String filename;
+	private ArrayList<String> tokens;
+	private RealMatrix matrix;
+	private int position;
+
+	public FeatureMatrix(String filename) {
+		this.filename = filename;
+		this.tokens = Parser.tokenize(filename);
+		this.matrix = MatrixUtils.createRealMatrix(Parser.countLines(filename), tokens.size());
+		this.position = 0;
+		populateFeatures();
+	}
+
+	private void populateFeatures() {
+		try (BufferedReader br = new BufferedReader(new FileReader("src/text/" + filename + ".txt"))) {
+			String line = br.readLine();
+			while (line != null) {
+				if (line.trim().isEmpty()) {
+					String[] splitString = Parser.parseLine(line);
+					for (String s : splitString) {
+						if (tokens.contains(s)) { matrix.setEntry(position, tokens.indexOf(s), 1); }
+					}
+					position++;
+				}
+				line = br.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public RealMatrix getMatrix() {
+		return matrix.copy();
+	}
+
+}

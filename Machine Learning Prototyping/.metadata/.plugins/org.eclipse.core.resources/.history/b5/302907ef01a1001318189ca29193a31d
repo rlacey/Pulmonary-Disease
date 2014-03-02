@@ -1,0 +1,53 @@
+package utils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class FeatureMatrix {
+	
+	private String filename;
+	private Tokenizer tokenizer;
+	private ArrayList<String> tokens;
+	int[][] matrix;
+	int rows;
+	int cols;
+	
+	public FeatureMatrix(String filename, Dictionary dictionary) {
+		this.filename = filename;
+		this.tokenizer = new Tokenizer(filename, true);
+		this.tokens = tokenizer.getTokens();
+		create();
+	}
+		
+	private void create() {
+		int numberOfLines = linesInFile();
+		matrix = new int[rows][cols];
+		int index = 0;
+		for(String line: tokenizer.lines()) {
+			String[] splitString = line.split("[\\p{Punct}\\s]+");
+			for (String s : splitString) {
+				if (keys.contains(s)) {
+					matrix[index][keys.indexOf(s)] = 1;					
+				}				
+			}
+			index++;
+		}
+	}
+	
+	public int[][] getMatrix() {
+		return matrix;
+	}
+	
+	public int rows() {
+		return rows;
+	}
+	
+	public int cols() {
+		return cols;
+	}
+	
+	public int get(int x, int y) {
+		return matrix[x][y];
+	}
+	
+}

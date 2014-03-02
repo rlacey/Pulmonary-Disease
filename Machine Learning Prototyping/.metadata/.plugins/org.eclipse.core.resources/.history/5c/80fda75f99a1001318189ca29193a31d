@@ -1,0 +1,15 @@
+package utils;
+
+import java.util.ArrayList;
+
+public class Parser {
+	
+	public static ArrayList<String> tokenize(String filename) {
+		return null;		
+	}
+	
+	public static ArrayList<String> tokenize(String filename, boolean splitPunctuation) {
+		return null;		
+	}
+
+}

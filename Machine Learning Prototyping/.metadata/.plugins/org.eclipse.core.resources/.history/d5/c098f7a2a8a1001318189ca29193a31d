@@ -1,0 +1,10 @@
+package utils;
+
+public class LinearSeparator {
+	
+	RealMatrix theta;
+	double theta_0;
+	
+	public LinearSep
+
+}

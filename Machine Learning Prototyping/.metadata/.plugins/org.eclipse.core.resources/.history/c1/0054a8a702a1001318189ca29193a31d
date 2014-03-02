@@ -1,0 +1,72 @@
+package utils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class FeatureMatrix {
+	
+	private String filename;
+	private Tokenizer tokenizer;
+	private ArrayList<String> tokens;
+	int[][] matrix;
+	int rows;
+	int cols;
+	
+	public FeatureMatrix(String filename, Dictionary dictionary) {
+		this.filename = filename;
+		this.tokenizer = new Tokenizer(filename, true);
+		this.tokens = tokenizer.getTokens();
+		create();
+	}
+		
+	private void create() {
+		int numberOfLines = linesInFile();
+		matrix = new int[rows][cols];
+		int index = 0;
+		for(String line: tokenizer.lines()) {
+			String[] splitString = line.split("[\\p{Punct}\\s]+");
+			for (String s : splitString) {
+				if (keys.contains(s)) {
+					matrix[index][keys.indexOf(s)] = 1;					
+				}				
+			}
+			index++;
+		}
+	}
+	
+	private int linesInFile() {
+		int numberOfLines = 0;
+		try(BufferedReader br = new BufferedReader(new FileReader("src/text/" + filename + ".txt"))) {		
+		      String line = br.readLine();
+		      while (line != null) {
+		    	  if (line.trim() != "") {
+		    		  numberOfLines++;
+		    	  }
+		    	  line = br.readLine();
+		      }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		return numberOfLines;
+	}
+	
+	public int[][] getMatrix() {
+		return matrix;
+	}
+	
+	public int rows() {
+		return rows;
+	}
+	
+	public int cols() {
+		return cols;
+	}
+	
+	public int get(int x, int y) {
+		return matrix[x][y];
+	}
+	
+}

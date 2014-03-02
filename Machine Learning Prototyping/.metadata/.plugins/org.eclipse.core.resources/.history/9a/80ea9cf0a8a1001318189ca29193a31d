@@ -1,0 +1,13 @@
+package Algorithms;
+
+import java.util.ArrayList;
+
+import org.apache.commons.math3.linear.RealMatrix;
+
+public class Perceptron {
+	
+	public static void train(RealMatrix featureMatrix, ArrayList<String> labels) {
+		
+	}
+
+}
