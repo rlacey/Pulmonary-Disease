@@ -41,7 +41,7 @@ public class Main {
 			}
 		}
 		double percent = correct / labels.size();
-		System.out.println("Algorithm got " + correct + " of " + labels.size() + " correct (" + percent*100 + "%)");
+		System.out.println("Algoritm got " + correct + " of " + labels.size() + " correct (" + percent*100 + "%)");
 	}
 
 }

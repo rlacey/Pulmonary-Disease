@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.apache.commons.math3.linear.Array2DRowRealMatrix"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="utils.Parser"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
+<fullyQualifiedTypeName name="java.util.HashSet"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="org.apache.commons.math3.linear.RealMatrix"/>
+<fullyQualifiedTypeName name="org.apache.commons.math3.linear.MatrixUtils"/>
+<fullyQualifiedTypeName name="Algorithms.Perceptron"/>
+<fullyQualifiedTypeName name="utils.LinearSeparator"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
+</qualifiedTypeNameHistroy>
