@@ -1,6 +1,8 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.apache.commons.math3.linear.RealMatrix;
 
 import algorithms.Perceptron;
@@ -13,35 +15,90 @@ import utils.Parser;
 public class Main {
 
 	public static void main(String[] args) {
+		/**
+		 * INITIALIZE
+		 */
+		// Bag of words
 		ArrayList<String> dictionary = Parser.tokenize("train-tweet");
-		ArrayList<String> labels = Parser.vectorizeLines("train-answer");
-		RealMatrix featureMatrix = FeatureMatrix.construct("train-tweet", dictionary);	
+		// Training data labels
+		ArrayList<String> trainLabels = Parser.vectorizeLines("train-answer");
+		// Test data labels
+		ArrayList<String> testLabels = Parser.vectorizeLines("test-answer");
+		// Training feature matrix
+		RealMatrix featureMatrix = FeatureMatrix.construct("train-tweet", dictionary);
+		// Training feature matrix
+		RealMatrix testMatrix = FeatureMatrix.construct("test-tweet", dictionary);
 		
+		/**
+		 * TRAIN PERCEPTRON
+		 */
 		System.out.println("Training perceptron...");
-		LinearSeparator separator = Perceptron.train(featureMatrix, labels);			
+		// Calculate linear separator
+		LinearSeparator separator = Perceptron.train(featureMatrix, trainLabels);	
+		// Weights
 		RealMatrix theta = separator.theta();
+		// Offset parameter
 		double theta_0 = separator.theta_0();
 		System.out.println("Training complete.");
 		
+		/**
+		 * CLASSIFY TRAINING DATA
+		 */
 		System.out.println("Classifying training data..");
-		RealMatrix predictions = Perceptron.classify(featureMatrix, theta, theta_0);		
+		// Labels assigned to training data by separator
+		RealMatrix trainingPredictionsMatrix = Perceptron.classify(featureMatrix, theta, theta_0);		
 		System.out.println("Classification complete");
 		
-		System.out.println("Analyzing...");
-		double[] pC= predictions.getRow(0);
-		double[] lC = new double[labels.size()];
-		for (int i=0; i<labels.size(); i++) {
-			lC[i] = Double.parseDouble(labels.get(i));
+		/**
+		 * ANALYZE TRAINING DATA
+		 */
+		System.out.println("Analyzing...");	
+		// Convert prediction labels to integer array
+		double[] trainingPredictions = trainingPredictionsMatrix.getRow(0);
+		// Convert actual labels to integer array
+		double[] trainingActuals = new double[trainLabels.size()];
+		for (int i=0; i<trainLabels.size(); i++) {
+			trainingActuals[i] = Double.parseDouble(trainLabels.get(i));
 		}
-		
+		// Counter of correct predictions
 		double correct = 0;
-		for (int i=0; i<labels.size(); i++) {
-			if (pC[i] - lC[i] <= 0.00000001) {
+		// Find which prediction labels matched actual labels
+		for (int i=0; i<trainLabels.size(); i++) {
+			if (Math.abs(trainingPredictions[i] - trainingActuals[i]) <= 0.00000001) {
 				correct++;
 			}
 		}
-		double percent = correct / labels.size();
-		System.out.println("Algorithm got " + correct + " of " + labels.size() + " correct (" + percent*100 + "%)");
-	}
+		double percent = correct / trainLabels.size();
+		System.out.println("Algorithm got " + correct + " of " + trainLabels.size() + " correct (" + percent*100 + "%)");
 
+		/**
+		 * CLASSIFY TEST DATA
+		 */
+		System.out.println("Classifying test data..");
+		// Labels assigned to test data by separator
+		RealMatrix testPredictionsMatrix = Perceptron.classify(testMatrix, theta, theta_0);		
+		System.out.println("Classification complete");
+		
+		/**
+		 * ANALYZE TEST DATA
+		 */
+		System.out.println("Analyzing...");	
+		// Convert prediction labels to integer array
+		double[] testPredictions = testPredictionsMatrix.getRow(0);
+		// Convert actual labels to integer array
+		double[] testActuals = new double[testLabels.size()];
+		for (int i=0; i<testLabels.size(); i++) {
+			testActuals[i] = Double.parseDouble(testLabels.get(i));
+		}
+		// Counter of correct predictions
+		double correctT = 0;
+		// Find which prediction labels matched actual labels
+		for (int i=0; i<testLabels.size(); i++) {
+			if (Math.abs(testPredictions[i] - testActuals[i]) <= 0.00001) {
+				correctT++;
+			}
+		}
+		double percentT = correctT / testLabels.size();
+		System.out.println("Algorithm got " + correctT + " of " + testLabels.size() + " correct (" + percentT*100 + "%)");
+	}
 }

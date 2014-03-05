@@ -9,6 +9,14 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 public class FeatureMatrix {
 	
+	/**
+	 * Create a feature matrix given a file and set of features.
+	 * 
+	 * @param filename Name of file in TEXT package
+	 * @param tokens Words whose appearance in file is tracked
+	 * @return (m,n) Matrix of word appearances where m is the number of lines in the file and 
+	 *               n is the number of features tracked
+	 */
 	public static RealMatrix construct(String filename, ArrayList<String> tokens) {
 		RealMatrix matrix = MatrixUtils.createRealMatrix(Parser.countLines(filename), tokens.size());
 		int position = 0;
