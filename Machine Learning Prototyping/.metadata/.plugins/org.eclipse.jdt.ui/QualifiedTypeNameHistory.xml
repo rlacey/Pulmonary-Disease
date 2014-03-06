@@ -11,4 +11,5 @@
 <fullyQualifiedTypeName name="Algorithms.Perceptron"/>
 <fullyQualifiedTypeName name="utils.LinearSeparator"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="algorithms.PassiveAgressive"/>
 </qualifiedTypeNameHistroy>
