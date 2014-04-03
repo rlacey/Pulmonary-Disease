@@ -26,6 +26,11 @@ public class RunPassiveAgressive {
 		// Training feature matrix
 		RealMatrix testMatrix = FeatureMatrix.construct("test-tweet", dictionary);
 		
+		System.out.println("FEATURE MATRIX: " + featureMatrix.getRow(0)[0]);
+		for (double d : featureMatrix.getRow(40)) {
+			System.out.print(d+ " ");
+		}
+		
 		/**
 		 * TRAIN PASSIVE AGGRESSIVE
 		 */

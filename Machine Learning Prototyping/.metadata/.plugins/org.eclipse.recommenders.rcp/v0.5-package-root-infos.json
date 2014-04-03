@@ -117,6 +117,19 @@
     "javaRuntime": true
   },
   {
+    "symbolicName": "libsvm",
+    "version": {
+      "major": -1,
+      "minor": -1,
+      "micro": -1,
+      "qualifier": ""
+    },
+    "jarFileFingerprint": "1e6bffcf750c37c5b061d47d4bdece2dc94777ba",
+    "jarFileModificationDate": "2014-04-02T23:50:10.671-04:00",
+    "location": "M:\\School\\6.UAP\\Code\\libsvm-3.18\\libsvm-3.18\\java\\libsvm.jar",
+    "javaRuntime": false
+  },
+  {
     "symbolicName": "jre",
     "version": {
       "major": 1,

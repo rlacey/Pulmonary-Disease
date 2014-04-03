@@ -2,6 +2,9 @@ package websample;
 
 import libsvm.*;
 
+/**
+ * Found at http://stackoverflow.com/questions/10792576/libsvm-java-implementation
+ */
 public class SOMain {
 
 	static double[][] train;
@@ -23,7 +26,14 @@ public class SOMain {
 		System.out.println("Training...");
 		svm_model model = svmTrain();
 		System.out.println("Evaluating...");
-		evaluate(train[600], model);
+		for (int i=0; i < 5; i++){
+			System.out.print("Node " + i);
+			evaluate(train[i], model);
+		}
+		for (int i=489; i < 505; i++){
+			System.out.print("Node " + i);
+			evaluate(train[i], model);
+		}
 		System.out.println("Done");
 	}
 	

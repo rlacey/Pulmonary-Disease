@@ -3,35 +3,36 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="257" key="DIALOG_WIDTH"/>
 		<item value="263" key="DIALOG_Y_ORIGIN"/>
-		<item value="1132" key="DIALOG_X_ORIGIN"/>
 		<item value="380" key="DIALOG_HEIGHT"/>
+		<item value="1132" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="casesensitive"/>
 		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="Perceptron" key="selection"/>
+		<item value="trainData" key="selection"/>
 		<list key="findhistory">
+			<item value="trainD"/>
+			<item value="trainData"/>
 			<item value="perceptron"/>
 			<item value="labels"/>
 			<item value="lC"/>
 			<item value="predictionMatrix"/>
 			<item value="pC"/>
 			<item value="trainingPredictions"/>
-			<item value="predictions"/>
-			<item value="print"/>
 		</list>
 		<list key="replacehistory">
+			<item value="trainData"/>
+			<item value=""/>
 			<item value="trainLabels"/>
 			<item value="trainingActuals"/>
 			<item value="trainingL"/>
 			<item value="trainingPredictionsMatrix"/>
 			<item value="trainingPredictions"/>
 			<item value="predictionMatrix"/>
-			<item value="training"/>
 		</list>
 	</section>
 </section>
