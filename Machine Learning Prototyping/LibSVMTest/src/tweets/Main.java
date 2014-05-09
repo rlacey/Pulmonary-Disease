@@ -20,8 +20,32 @@ import libsvm.svm_problem;
  */
 public class Main {
 
-	static double[][] train;
-	static double[][] test;
+  static double[][] train  = {
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  {-1, 25.446,209.12,8.1302,4.9141,0.0063694},
+	  {-1, 25.446,209.12,8.1302,4.9141,0.0063694},
+	  {-1, 147.14,206.94,2.9758,4.2234,1.1507},
+	  {-1, 22.377,225.05,6.4353,4.1762,0.016768},
+	  {-1, 189.44,274.37,3.6766,3.8523,0.86594},
+	  {-1, 156.47,261.78,4.4985,4.861,1.4555},
+	  {-1, 105.06,224.94,1.9072,6.2434,0.67651},
+	  {-1, 105.3,224.99,1.9063,6.6792,0.68637},
+	  {-1, 156.47,261.78,4.4985,4.861,1.4555},
+	  {1, 10.891,409.22,3.6419,4.6398,0.14353},
+	  {1, 10.891,409.22,3.6419,4.6398,0.14353},
+	  {1, 188.15,337.43,3.0589,3.1482,2.5962},
+	  {1, 28.831,409.16,3.2787,4.6851,0.15507},
+	  {1, 196.52,275.82,3.718,13.258,10.72},
+	  };
+	  static double[][] test = {
+		  {1, 196.52,275.82,3.718,13.258,10.72},
+	    };
 	static double[] results = new double[70];
 	static int total = 0;
 	static int correct = 0;
@@ -56,18 +80,18 @@ public class Main {
 				
 		// Prepend label to be first element of feature matrix of training data
 		double[][] trainData = featureMatrix.getData();
-		train = new double[trainLabels.size()][];
-		for (int i=0; i<trainLabels.size(); i++) {
-			train[i] = new double[trainData[i].length+1];
-			// Set label as first element
-			train[i][0] = Double.parseDouble(trainLabels.get(i));
-			// Map data[i] to [i+1] element
-			for (int j=1; j<trainData.length+1; j++) {
-				train[i][j] = trainData[i][j];
-			}
-		}
+//		train = new double[trainLabels.size()][];
+//		for (int i=0; i<trainLabels.size(); i++) {
+//			train[i] = new double[trainData[i].length+1];
+//			// Set label as first element
+//			train[i][0] = Double.parseDouble(trainLabels.get(i));
+//			// Map data[i] to [i+1] element
+//			for (int j=1; j<trainData.length+1; j++) {
+//				train[i][j] = trainData[i][j];
+//			}
+//		}
 		
-		test = testMatrix.getData();
+//		test = testMatrix.getData();
 		
 		// Train classifier
 		System.out.println("Training...");

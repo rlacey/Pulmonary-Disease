@@ -1,0 +1,194 @@
+package tweets;
+
+import java.util.ArrayList;
+
+import org.apache.commons.math3.linear.RealMatrix;
+
+import utils.FeatureMatrix;
+import utils.Parser;
+import libsvm.svm;
+import libsvm.svm_model;
+import libsvm.svm_node;
+import libsvm.svm_parameter;
+import libsvm.svm_problem;
+
+/**
+ * Design structure from http://stackoverflow.com/questions/10792576/libsvm-java-implementation
+ * 
+ * @author Ryan Lacey
+ *
+ */
+public class Main {
+
+  static double[][] train  = {
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  {-1, 11.091,74.869,0.12511,0.27383,0,990.67},
+	  {-1, 119.52,27.001,0.32362,0.19728,63.431,229.81},
+	  {-1, 728.61,92.359,0.3875,0.080477,154.32,204.79},
+	  {1, 65.733,68.083,0.26896,0.025987,196.52,275.82},
+	  {1, 383.98,80.166,0.5006,0.0528,59.842,332.51},
+	  {1, 476.22,17.604,0.40705,0.069049,127.48,202.05},
+	  {1, 159.78,26.817,0.51606,0.096782,167.83,200.07},
+	  {-1, 684.26,75.571,0.61068,0.096298,55.143,201.98},
+	  {-1, 398.87,56.193,0.51137,0.074616,96.842,201.63},
+	  {-1, 318.19,97.396,0.27199,0.096144,189.44,274.37},
+	  {1, 382.28,130,0.33801,0.12879,181.22,202.91},
+	  {-1, 319.86,106.22,0.29,0.096898,190.11,214.73},
+	  {-1, 11.091,74.869,0.12511,0.27383,0,990.67},
+	  {-1, 119.64,27.284,0.31959,0.19706,63.345,230.19},
+	  {1, 135.44,23.7,0.23456,0.041043,199.95,200.09},
+	  {-1, 60.236,103.75,0.20628,0.080682,183.14,299.03},
+	  {-1, 71.529,35.101,0.2223,0.07495,156.47,261.78},
+	  {-1, 467.22,54.054,0.21328,0.1898,0,243.42},
+	  {-1, 214.17,23.113,0.52434,0.083642,105.06,224.94},
+	  {1, 595.91,24.579,0.305,0.081124,28.831,409.16},
+	  {-1, 83.937,23.431,0.32647,0.11849,0,200.03},
+	  {1, 25.864,4.2833,0.24389,0.040589,199.46,200.04},
+	  {-1, 478.24,65.083,0.28473,0.036893,60.51,214.03},
+//	  {1, 714.08,29.689,0.27672,0.08561,28.535,409.16},
+	  {1, 252.45,38.558,0.24634,0.037813,199.49,200.08},
+	  {-1, 8.4621,2.2784,0.26627,0.10593,0,301.86},
+	  {-1, 23.042,1.9399,0.52458,0.064346,105.3,224.99},
+	  {-1, 51.209,7.7409,0.28054,0.040765,60.542,214.07},
+	  {1, 27.25,4.5143,0.24862,0.041429,199.43,200.02}  
+	   };
+	  static double[][] test = {
+		  {1, 714.08,29.689,0.27672,0.08561,28.535,409.16},
+	    };
+	static double[] results = new double[70];
+	static int total = 0;
+	static int correct = 0;
+	
+	public static void main(String[] args) {
+		/**
+		 * INITIALIZE
+		 */
+		// Bag of words
+		ArrayList<String> dictionary = Parser.tokenize("train-tweet");
+		// Training data labels
+		ArrayList<String> trainLabels = Parser.vectorizeLines("train-answer");
+		// Test data labels
+		ArrayList<String> testLabels = Parser.vectorizeLines("test-answer");
+		// Training feature matrix
+		RealMatrix featureMatrix = FeatureMatrix.construct("train-tweet", dictionary);
+		// Training feature matrix
+		RealMatrix testMatrix = FeatureMatrix.construct("test-tweet", dictionary);					
+
+// ORIGINAL DATA GENERATION		
+//		train = new double[1000][]; 
+//		test = new double[10][];		
+//		for (int i = 0; i < train.length; i++){
+//		    if (i+1 > (train.length/2)){        // 50% positive
+//		        double[] vals = {1,0,i+i};
+//		        train[i] = vals;
+//		    } else {
+//		        double[] vals = {0,0,i-i-i-2}; // 50% negative
+//		        train[i] = vals;
+//		    }           
+//		}
+				
+		// Prepend label to be first element of feature matrix of training data
+		double[][] trainData = featureMatrix.getData();
+//		train = new double[trainLabels.size()][];
+//		for (int i=0; i<trainLabels.size(); i++) {
+//			train[i] = new double[trainData[i].length+1];
+//			// Set label as first element
+//			train[i][0] = Double.parseDouble(trainLabels.get(i));
+//			// Map data[i] to [i+1] element
+//			for (int j=1; j<trainData.length+1; j++) {
+//				train[i][j] = trainData[i][j];
+//			}
+//		}
+		
+//		test = testMatrix.getData();
+		
+		// Train classifier
+		System.out.println("Training...");
+		svm_model model = svmTrain();
+		
+		// Generate predictions
+		System.out.println("Evaluating...");
+		for (int i=0; i < test.length; i++){
+			System.out.print("Node " + i + " ");
+			evaluate(test[i], model);
+		}
+		
+		// Analyze results against known test labels
+		for (int i=0; i < results.length; i++){
+			if (results[i] - Double.parseDouble(testLabels.get(i)) < 0.1) {
+				correct++;
+			}
+		}
+		System.out.println("\n" + correct + "/"+total + " correct");		
+	}
+	
+	private static svm_model svmTrain() {
+	    svm_problem prob = new svm_problem();
+	    int dataCount = train.length;
+	    prob.y = new double[dataCount];
+	    prob.l = dataCount;
+	    prob.x = new svm_node[dataCount][];     
+
+	    for (int i = 0; i < dataCount; i++){            
+	        double[] features = train[i];
+	        prob.x[i] = new svm_node[features.length-1];
+	        for (int j = 1; j < features.length; j++){
+	            svm_node node = new svm_node();
+	            node.index = j;
+	            node.value = features[j];
+	            prob.x[i][j-1] = node;
+	        }           
+	        prob.y[i] = features[0];
+	    }               
+
+	    svm_parameter param = new svm_parameter();
+	    param.probability = 1;
+	    param.gamma = 0.5;
+	    param.nu = 0.5;
+	    param.C = 1;
+	    param.svm_type = svm_parameter.C_SVC;
+	    param.kernel_type = svm_parameter.LINEAR;       
+	    param.cache_size = 20000;
+	    param.eps = 0.001;      
+
+	    svm_model model = svm.svm_train(prob, param);
+
+	    return model;
+	}
+	
+	public static double evaluate(double[] features, svm_model model) 
+	{
+	    svm_node[] nodes = new svm_node[features.length-1];
+	    for (int i = 1; i < features.length; i++)
+	    {
+	        svm_node node = new svm_node();
+	        node.index = i;
+	        node.value = features[i];
+
+	        nodes[i-1] = node;
+	    }
+
+	    int totalClasses = 2;       
+	    int[] labels = new int[totalClasses];
+	    svm.svm_get_labels(model,labels);
+
+	    double[] prob_estimates = new double[totalClasses];
+	    double v = svm.svm_predict_probability(model, nodes, prob_estimates);
+
+	    for (int i = 0; i < totalClasses; i++){
+	        System.out.print("(" + labels[i] + ":" + prob_estimates[i] + ")");
+	    }
+	    System.out.println("  (Actual:" + features[0] + " Prediction:" + v + ")");   
+	    
+	    results[total] = v;
+	    total++;
+
+	    return v;
+	}
+}
