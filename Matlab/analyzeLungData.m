@@ -1,7 +1,6 @@
 function [ data ] = analyzeLungData( filepath )
 % Extract sound data and sampling frequency
 [wave,fs] = audioread(filepath);
-
 wave = wave(:,1);
 
 % Sampling range (time in seconds)
@@ -19,7 +18,7 @@ wavefft = abs(fft(wave));
 smoothed_wavefft = smooth(wavefft, 201, 'loess');
 
 % Indexes of frequencies less than 200 Hz
-LF_indexes = find(f<200);
+LF_indexes = find(f>100 & f<200);
 % Frequencies in low frequency range
 LF_f = f(LF_indexes);
 % FFT signal in low frequency range
@@ -42,28 +41,37 @@ MF_max = MF_wavefft(MF_index_max);
 % Normalized mid frequency domin
 MF_norm_wavefft = MF_wavefft / MF_max;
 
+% Indexes of frequencies 200 Hz - 2000 Hz
+HF_indexes = find(f>800 & f<2000);
+% Frequencies in mid frequency range
+HF_f = f(HF_indexes);
+% FFT signal in mid frequency range
+HF_wavefft = smoothed_wavefft(HF_indexes);
+% Maximum signal in mid frequency range
+HF_index_max = HF_wavefft == max(HF_wavefft);
+HF_max = HF_wavefft(HF_index_max);
+% Normalized mid frequency domin
+HF_norm_wavefft = HF_wavefft / HF_max;
+
 % ANALYTICS
-% avg_low = mean(LF_wavefft);
-% avg_med = mean(MF_wavefft);
-% % avg_high = mean(wavefft(high_frequency_indecies));
-% normf_avg_low = mean(LF_norm_wavefft);
-% normf_avg_med = mean(MF_norm_wavefft);
-% max_low = LF_f(LF_index_max);
-% max_med = MF_f(MF_index_max);
-% % max_high = max(wavefft(high_frequency_indecies));
-% [pks_low, locs_low] = findpeaks(LF_wavefft, 'NPEAKS', 3, 'SORTSTR', 'descend');
-% f_pk_low_1 = LF_f(locs_low(1));
-% f_pk_low_2 = LF_f(locs_low(2));
-% f_pk_low_3 = LF_f(locs_low(3));
-% [pks_med, locs_med] = findpeaks(MF_wavefft, 'NPEAKS', 3, 'SORTSTR', 'descend');
-% f_pk_med_1 = MF_f(locs_med(1));
-% f_pk_med_2 = MF_f(locs_med(2));
-% f_pk_med_3 = MF_f(locs_med(3));
+avg_low = mean(LF_wavefft);
+avg_med = mean(MF_wavefft);
+avg_high = mean(HF_wavefft);
+% avg_high = mean(wavefft(high_frequency_indecies));
+normf_avg_low = mean(LF_norm_wavefft);
+normf_avg_med = mean(MF_norm_wavefft);
+normf_avg_high = mean(HF_norm_wavefft);
+max_low = LF_f(LF_index_max);
+max_med = MF_f(MF_index_max);
+max_high = HF_f(HF_index_max);
+% max_high = max(wavefft(high_frequency_indecies));
+wheeze_estimate = CountWheezes( wave, t, fs );
 
 % OUTPUT
-data = [LF_f(LF_index_max), MF_f(MF_index_max), ...
-        LF_max/mean(LF_wavefft), MF_max/mean(MF_wavefft), MF_max/LF_max];
-% data = [avg_low, avg_med, normf_avg_low, normf_avg_med, max_low, max_med, ...
-%     f_pk_low_1, f_pk_low_2, f_pk_low_3, f_pk_med_1, f_pk_med_2, f_pk_med_3];
+data = [max_low, max_med, ... % Frequency of max signal
+        LF_max/avg_low, MF_max/avg_med, ... % Ratio max signal to avg signal
+        LF_max/MF_max, HF_max/MF_max, ... % Ratio of range maxes
+        mean(LF_wavefft)/mean(MF_wavefft), mean(HF_wavefft)/mean(MF_wavefft), ... % Ratio of range avgs
+        wheeze_estimate]; % Quantity of wheezes detected
 end
 
