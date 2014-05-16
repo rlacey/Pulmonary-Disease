@@ -1,196 +1,103 @@
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import SVMTools.Classify;
+import SVMTools.Parameter;
+import SVMTools.Problem;
 import libsvm.svm;
 import libsvm.svm_model;
-import libsvm.svm_node;
 import libsvm.svm_parameter;
 import libsvm.svm_problem;
 
 public class Main {
 
-	static final String DEFAULT_PARAM = "-t 2 -c 100";
-
-	private static double atof(String s) {
-		return Double.valueOf(s).doubleValue();
+	private static final String DEFAULT_PARAM = "-t 2 -c 100";	
+	
+	private final static int CLASSES = 2;
+	
+	private static double[][] train = {
+//		NORMALIZED
+//		 {1, -1, 1},
+//		 {1, -0.985765124555, 0.74531835206},
+//		 {1, -0.807829181495, 0.850187265918},
+//		 {2, 0.722419928826, -1},
+//		 {2, 1, 0.970037453184}
+//		UNSCALED
+		{1, 79,  435},
+		{1, 81,  401},
+		{1, 106, 415},
+		{2, 321, 168},
+		{2, 360, 431}
+	};
+	
+	private static double[][] test = {
+//		NORMALIZED
+//		{1, -0.985765124555, 0.962546816479},
+//		{2, 0.722419928826, -0.797752808989}
+//		UNSCALED
+		{1, 81, 430},
+		{2, 321, 195}
+	};
+	public static int l1 = train.length;
+	public static int l2 = train[0].length;
+	
+	private static double norm(double[] weights, double value) {	
+		if(value == weights[2])
+			value = weights[0];
+		else if(value == weights[3])
+			value = weights[1];
+		else
+			value = weights[0] + (weights[1]-weights[0]) * 
+				(value-weights[2])/
+				(weights[3]-weights[2]);
+		return value;
 	}
 
-	private static int atoi(String s) {
-		return Integer.parseInt(s);
-	}
-
-	static void run(String args) {
-		svm_parameter param = new svm_parameter();
-
-		// default values
-		param.svm_type = svm_parameter.C_SVC;
-		param.kernel_type = svm_parameter.RBF;
-		param.degree = 3;
-		param.gamma = 0;
-		param.coef0 = 0;
-		param.nu = 0.5;
-		param.cache_size = 40;
-		param.C = 1;
-		param.eps = 1e-3;
-		param.p = 0.1;
-		param.shrinking = 1;
-		param.probability = 1;
-		param.nr_weight = 0;
-		param.weight_label = new int[0];
-		param.weight = new double[0];
-
-		// parse options
-		StringTokenizer st = new StringTokenizer(args);
-		String[] argv = new String[st.countTokens()];
-		for (int i = 0; i < argv.length; i++)
-			argv[i] = st.nextToken();
-
-		for (int i = 0; i < argv.length; i++) {
-			if (argv[i].charAt(0) != '-')
-				break;
-			if (++i >= argv.length) {
-				System.err.print("unknown option\n");
-				break;
-			}
-			switch (argv[i - 1].charAt(1)) {
-			case 's':
-				param.svm_type = atoi(argv[i]);
-				break;
-			case 't':
-				param.kernel_type = atoi(argv[i]);
-				break;
-			case 'd':
-				param.degree = atoi(argv[i]);
-				break;
-			case 'g':
-				param.gamma = atof(argv[i]);
-				break;
-			case 'r':
-				param.coef0 = atof(argv[i]);
-				break;
-			case 'n':
-				param.nu = atof(argv[i]);
-				break;
-			case 'm':
-				param.cache_size = atof(argv[i]);
-				break;
-			case 'c':
-				param.C = atof(argv[i]);
-				break;
-			case 'e':
-				param.eps = atof(argv[i]);
-				break;
-			case 'p':
-				param.p = atof(argv[i]);
-				break;
-			case 'h':
-				param.shrinking = atoi(argv[i]);
-				break;
-			case 'b':
-				param.probability = atoi(argv[i]);
-				break;
-			case 'w':
-				++param.nr_weight;
-				{
-					int[] old = param.weight_label;
-					param.weight_label = new int[param.nr_weight];
-					System.arraycopy(old, 0, param.weight_label, 0,
-							param.nr_weight - 1);
+	public static void main(String[] args) {
+		FileDialog dialog = new FileDialog(new Frame(), "Save", FileDialog.SAVE);
+		dialog.setVisible(true);
+		String filename = dialog.getDirectory() + dialog.getFile();
+		try {
+			DataOutputStream fp = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)));
+			int n = train.length;
+			for (int i = 0; i < n; i++) {
+				fp.writeBytes(""+train[i][0]);
+				for (int j = 1; j < train[0].length; j++) {
+					fp.writeBytes(" " + j + ":" + train[i][j]);
 				}
-
-				{
-					double[] old = param.weight;
-					param.weight = new double[param.nr_weight];
-					System.arraycopy(old, 0, param.weight, 0,
-							param.nr_weight - 1);
-				}
-
-				param.weight_label[param.nr_weight - 1] = atoi(argv[i - 1]
-						.substring(2));
-				param.weight[param.nr_weight - 1] = atof(argv[i]);
-				break;
-			default:
-				System.err.print("unknown option\n");
+				fp.writeBytes("\n");
 			}
+			fp.close();
+		} catch (IOException e) {
+			System.err.print(e);
 		}
 		
-		double[][] train = {
-			 {1, -1, 1},
-			 {1, -0.985765124555, 0.74531835206},
-			 {1, -0.807829181495, 0.850187265918},
-			 {2, 0.722419928826, -1},
-			 {2, 1, 0.970037453184}
-		};
-
-		// build problem
-		svm_problem prob = new svm_problem();
-		prob.l = train.length;
-		prob.y = new double[prob.l];
-
-		if (param.gamma == 0) {
-			param.gamma = 0.5;
+		SVMTools.svm_scale s = new SVMTools.svm_scale();
+		double[][][] weights = null;
+		try {
+			weights = s.run(new String[]{filename}, l1, l2, test);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		prob.x = new svm_node[prob.l][2];
-		for (int i = 0; i < prob.l; i++) {
-			for(int j=0; j<train[0].length-1; j++) {
-				prob.x[i][j] = new svm_node();
-				prob.x[i][j].index = j+1;				
-				prob.x[i][j].value = train[i][j+1];							
-			}	
-			prob.y[i] = train[i][0];
-		}
+		train = weights[0];
+		test = weights[1];
+		
+		svm_parameter parameter = Parameter.generate(DEFAULT_PARAM);		
+		
+		svm_problem problem = Problem.generate(parameter, train);
 
-		// build model & classify
-		svm_model model = svm.svm_train(prob, param);
-		svm_node[] x = new svm_node[2];
-		x[0] = new svm_node();
-		x[1] = new svm_node();
-		x[0].index = 1;
-		x[1].index = 2;
+		svm_model model = svm.svm_train(problem, parameter);
 
-		int totalClasses = 2;
-		int[] labels = new int[totalClasses];
-		svm.svm_get_labels(model, labels);
-
-		double[][] test = { { 1, -0.985765124555, 0.962546816479 },
-				{ 2, 0.722419928826, -0.797752808989 } };
-
-		System.out.println("Evaluating...");
+		System.out.println("Evaluating...\n");
 		for (int i = 0; i < test.length; i++) {
-			System.out.print("Node " + i + " ");
-			evaluate(test[i], model);
+			System.out.printf("Node %d", i);
+			Classify.evaluate(test[i], CLASSES, model);
 		}
-
-	}
-
-	public static double evaluate(double[] features, svm_model model) {
-		svm_node[] nodes = new svm_node[features.length - 1];
-		for (int i = 1; i < features.length; i++) {
-			svm_node node = new svm_node();
-			node.index = i;
-			node.value = features[i];
-
-			nodes[i - 1] = node;
-		}
-
-		int totalClasses = 2;
-		int[] labels = new int[totalClasses];
-		svm.svm_get_labels(model, labels);
-
-		double[] prob_estimates = new double[totalClasses];
-		double v = svm.svm_predict_probability(model, nodes, prob_estimates);
-
-		for (int i = 0; i < totalClasses; i++) {
-			System.out.print("(" + labels[i] + ":" + prob_estimates[i] + ")");
-		}
-		System.out.println("  (Actual:" + features[0] + " Prediction:" + v
-				+ ")");
-
-		return v;
-	}
-
-	public static void main(String[] argv) {
-		run(DEFAULT_PARAM);
 	}
 }

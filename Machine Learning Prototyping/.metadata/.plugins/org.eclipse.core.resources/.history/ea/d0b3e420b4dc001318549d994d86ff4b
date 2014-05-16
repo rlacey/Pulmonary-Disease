@@ -1,0 +1,98 @@
+import SVMTools.Parameter;
+import libsvm.svm;
+import libsvm.svm_model;
+import libsvm.svm_node;
+import libsvm.svm_parameter;
+import libsvm.svm_problem;
+
+public class Main {
+
+	static final String DEFAULT_PARAM = "-t 2 -c 100";	
+	
+	static final double[][] train = {
+		 {1, -1, 1},
+		 {1, -0.985765124555, 0.74531835206},
+		 {1, -0.807829181495, 0.850187265918},
+		 {2, 0.722419928826, -1},
+		 {2, 1, 0.970037453184}
+	};
+	
+	static final double[][] test = {
+		{ 1, -0.985765124555, 0.962546816479 },
+		{ 2, 0.722419928826, -0.797752808989 }
+	};
+
+	static void run(String args) {
+		svm_parameter param = Parameter.generate(args);		
+
+		// build problem
+		svm_problem prob = new svm_problem();
+		prob.l = train.length;
+		prob.y = new double[prob.l];
+
+		if (param.gamma == 0) {
+			param.gamma = 0.5;
+		}
+		
+		prob.x = new svm_node[prob.l][2];
+		for (int i = 0; i < prob.l; i++) {
+			for(int j=0; j<train[0].length-1; j++) {
+				prob.x[i][j] = new svm_node();
+				prob.x[i][j].index = j+1;				
+				prob.x[i][j].value = train[i][j+1];							
+			}	
+			prob.y[i] = train[i][0];
+		}
+
+		// build model & classify
+		svm_model model = svm.svm_train(prob, param);
+		svm_node[] x = new svm_node[2];
+		x[0] = new svm_node();
+		x[1] = new svm_node();
+		x[0].index = 1;
+		x[1].index = 2;
+
+		int totalClasses = 2;
+		int[] labels = new int[totalClasses];
+		svm.svm_get_labels(model, labels);
+
+		
+
+		System.out.println("Evaluating...");
+		for (int i = 0; i < test.length; i++) {
+			System.out.print("Node " + i + " ");
+			evaluate(test[i], model);
+		}
+
+	}
+
+	public static double evaluate(double[] features, svm_model model) {
+		svm_node[] nodes = new svm_node[features.length - 1];
+		for (int i = 1; i < features.length; i++) {
+			svm_node node = new svm_node();
+			node.index = i;
+			node.value = features[i];
+
+			nodes[i - 1] = node;
+		}
+
+		int totalClasses = 2;
+		int[] labels = new int[totalClasses];
+		svm.svm_get_labels(model, labels);
+
+		double[] prob_estimates = new double[totalClasses];
+		double v = svm.svm_predict_probability(model, nodes, prob_estimates);
+
+		for (int i = 0; i < totalClasses; i++) {
+			System.out.print("(" + labels[i] + ":" + prob_estimates[i] + ")");
+		}
+		System.out.println("  (Actual:" + features[0] + " Prediction:" + v
+				+ ")");
+
+		return v;
+	}
+
+	public static void main(String[] argv) {
+		run(DEFAULT_PARAM);
+	}
+}

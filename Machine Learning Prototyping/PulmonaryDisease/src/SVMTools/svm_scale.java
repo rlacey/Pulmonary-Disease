@@ -1,11 +1,9 @@
 package SVMTools;
 
-import libsvm.*;
 import java.io.*;
 import java.util.*;
-import java.text.DecimalFormat;
 
-class svm_scale
+public class svm_scale
 {
 	private String line = null;
 	private double lower = -1.0;
@@ -20,6 +18,13 @@ class svm_scale
 	private int max_index;
 	private long num_nonzeros = 0;
 	private long new_num_nonzeros = 0;
+	
+	double absMin;
+	double absMax;
+	int rowCount = -1;
+	int colCount = 0;
+	double[][] newTrain;
+	double[][] newTest;
 
 	private static void exit_with_help()
 	{
@@ -42,7 +47,7 @@ class svm_scale
 	}
 
 	private void output_target(double value)
-	{
+	{		
 		if(y_scaling)
 		{
 			if(value == y_min)
@@ -55,6 +60,7 @@ class svm_scale
 		}
 
 		System.out.print(value + " ");
+		newTrain[rowCount][0] = value;		
 	}
 
 	private void output(int index, double value)
@@ -64,6 +70,9 @@ class svm_scale
 		if(feature_max[index] == feature_min[index])
 			return;
 
+		absMin = feature_min[index];
+		absMax = feature_max[index];
+		
 		if(value == feature_min[index])
 			value = lower;
 		else if(value == feature_max[index])
@@ -76,7 +85,35 @@ class svm_scale
 		{
 			System.out.print(index + ":" + value + " ");
 			new_num_nonzeros++;
+			newTrain[rowCount][colCount] = value;
 		}
+	}
+	
+	private double output2(int index, double value)
+	{
+		System.out.printf("\t\t\tlower:%f  |  upper:%f  |  min:%f  |  max:%f  |  value:%f    ", lower, upper, feature_min[index], feature_max[index], value);
+		/* skip single-valued attribute */
+		if(feature_max[index] == feature_min[index])
+			return value;
+
+		absMin = feature_min[index];
+		absMax = feature_max[index];
+		
+		if(value == feature_min[index])
+			value = lower;
+		else if(value == feature_max[index])
+			value = upper;
+		else
+			value = lower + (upper-lower) * 
+				(value-feature_min[index])/
+				(feature_max[index]-feature_min[index]);		
+		if(value != 0)
+		{
+			System.out.print(index + ":" + value + " ");
+			new_num_nonzeros++;
+			return value;
+		}
+		return value;
 	}
 
 	private String readline(BufferedReader fp) throws IOException
@@ -85,8 +122,11 @@ class svm_scale
 		return line;
 	}
 
-	private void run(String []argv) throws IOException
+	public double[][][] run(String []argv, int l1, int l2, double[][] test) throws IOException
 	{
+		newTrain = new double[l1][];
+		newTest = new double[test.length][];
+		
 		int i,index;
 		BufferedReader fp = null, fp_restore = null;
 		String save_filename = null;
@@ -314,6 +354,9 @@ class svm_scale
 		/* pass 3: scale */
 		while(readline(fp) != null)
 		{
+			rowCount++;
+			colCount = 0;
+			newTrain[rowCount] = new double[l2];
 			int next_index = 1;
 			double target;
 			double value;
@@ -323,6 +366,7 @@ class svm_scale
 			output_target(target);
 			while(st.hasMoreElements())
 			{
+				colCount++;
 				index = Integer.parseInt(st.nextToken());
 				value = Double.parseDouble(st.nextToken());
 				for (i = next_index; i<index; i++)
@@ -342,11 +386,20 @@ class svm_scale
 			+"Use -l 0 if many original feature values are zeros\n");
 
 		fp.close();
+		
+		for (int a=0; a<test.length; a++) {
+			newTest[a] = new double[test[0].length];
+			newTest[a][0] = test[a][0];
+			for (int b=1; b<test[0].length; b++) {
+				newTest[a][b] = output2(b, test[a][b]);
+			}
+		}
+		return new double[][][] {newTrain, newTest};
 	}
 
 	public static void main(String argv[]) throws IOException
 	{		
 		svm_scale s = new svm_scale();
-		s.run(argv);
+		s.run(argv, 0, 0, new double[][] {});
 	}
 }

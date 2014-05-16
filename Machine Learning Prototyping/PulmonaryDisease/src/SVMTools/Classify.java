@@ -1,0 +1,32 @@
+package SVMTools;
+
+import libsvm.svm;
+import libsvm.svm_model;
+import libsvm.svm_node;
+
+public class Classify {
+	
+	public static double evaluate(double[] features, int classes, svm_model model) {
+		svm_node[] nodes = new svm_node[features.length - 1];
+		for (int i = 1; i < features.length; i++) {
+			svm_node node = new svm_node();
+			node.index = i;
+			node.value = features[i];
+			nodes[i - 1] = node;
+		}
+
+		int[] labels = new int[classes];
+		svm.svm_get_labels(model, labels);
+
+		double[] prob_estimates = new double[classes];
+		double v = svm.svm_predict_probability(model, nodes, prob_estimates);
+
+		for (int i = 0; i < classes; i++) {
+			System.out.printf(" (%d:%.12s)", labels[i], prob_estimates[i]);
+		}
+		System.out.printf(" (Actual: %.1f Prediction: %.1f)\n", features[0], v);
+
+		return v;
+	}
+
+}
