@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="M:\School\6.UAP\Code\commons-math3-3.2-bin\commons-math3-3.2" key="org.eclipse.jdt.ui.lastextjar"/>
+	<item value="M:\School\6.UAP\Code\libsvm-3.18\libsvm-3.18\java" key="org.eclipse.jdt.ui.lastextjar"/>
 	<section name="RefactoringWizard.preview">
 		<item value="600" key="width"/>
 		<item value="400" key="height"/>
@@ -22,7 +22,7 @@
 	</section>
 	<section name="NewClassWizardPage">
 		<item value="false" key="create_constructor"/>
-		<item value="true" key="create_main"/>
+		<item value="false" key="create_main"/>
 		<item value="true" key="create_unimplemented"/>
 	</section>
 	<section name="OptionalMessageDialog.hide.">

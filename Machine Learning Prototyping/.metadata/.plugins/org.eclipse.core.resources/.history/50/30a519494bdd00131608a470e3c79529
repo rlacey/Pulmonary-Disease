@@ -1,0 +1,22 @@
+package SVMTools;
+
+public class Data {
+	
+	private double data[][];
+	
+	private int min_index = 0;
+	private int max_index = 0;
+	
+	public Data(double[][] data) {
+		this.data = data;
+	}
+
+	public double[][] normalize() {
+		setMaxIndex();
+		return null;
+	}
+	
+	private void setMaxIndex() {
+		max_index = 0;
+	}
+}

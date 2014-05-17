@@ -1,0 +1,10 @@
+package SVMTools;
+
+public class Data {
+
+	public double[][] normalize(double[][] data) {
+		int min_index = 0;
+		int max_index = 0;
+		return null;
+	}
+}

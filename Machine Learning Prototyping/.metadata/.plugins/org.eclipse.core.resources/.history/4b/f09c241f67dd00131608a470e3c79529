@@ -1,0 +1,77 @@
+package SVMTools;
+
+public class Data {
+	
+	private double data[][];
+	private double normData[][];
+	private int rows;
+	private int cols;	
+	private double[] mins;
+	private double[] maxes;
+	private static final int LOWER = -1;
+	private static final int UPPER = 1;
+	
+	public Data(double[][] data) {
+		this.data = data;
+		this.normData = data;
+		this.rows = data.length;
+		this.cols = data[0].length-1;
+		mins = new double[cols];
+		maxes = new double[cols];
+	}
+	
+	public double[][] getData() {
+		return data.clone();
+	}
+	
+	public double[][] getNormalizedData() {
+		return normData.clone();
+	}
+	
+	public double[][] getWeights() {
+		return new double[][]{new double[]{LOWER}, new double[]{UPPER}, mins, maxes};
+	}
+
+	public double[][] normalize() {
+		findMinMax();
+		reweight();
+		return null;
+	}
+	
+	private void findMinMax() {
+		for (int i=0; i<cols; i++) {
+			mins[i] = Double.MAX_VALUE;
+			maxes[i] = Double.MIN_VALUE;
+		}
+		for (int i=0; i<rows; i++) {
+			for (int j=0; j<cols; j++) {
+				mins[j] = Math.min(mins[j], data[i][j+1]);
+				maxes[j] = Math.max(maxes[j], data[i][j+1]);
+			}
+		}
+	}
+	
+	private void reweight() {
+		for (int i=0; i<rows; i++) {
+			for (int j=0; j<cols; j++) {
+				mins[j] = Math.min(mins[j], data[i][j+1]);
+				maxes[j] = Math.max(maxes[j], data[i][j+1]);
+				normData[row][index] = reweightPoint(int row, int index, double value)
+			}
+		}
+	}
+	
+	private double reweightPoint(int row, int index, double value) {
+		if(value == mins[index]) {
+			value = LOWER;
+		}
+		else if(value == maxes[index]) {
+			value = UPPER;
+		}
+		else {
+			value = LOWER + (UPPER-LOWER) * (value-mins[index]) / (maxes[index]-mins[index]);		
+		}
+		return value;
+	}
+		
+}

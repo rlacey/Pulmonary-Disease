@@ -16,7 +16,7 @@ public class Problem {
 			param.gamma = 0.5;
 		}
 		
-		prob.x = new svm_node[prob.l][2];
+		prob.x = new svm_node[prob.l][train[0].length-1];
 		for (int i = 0; i < prob.l; i++) {
 			for(int j=0; j<train[0].length-1; j++) {
 				prob.x[i][j] = new svm_node();

@@ -1,0 +1,64 @@
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import SVMTools.Classify;
+import SVMTools.Data;
+import SVMTools.Parameter;
+import SVMTools.Problem;
+import libsvm.svm;
+import libsvm.svm_model;
+import libsvm.svm_parameter;
+import libsvm.svm_problem;
+
+public class Main {
+
+	private static final String DEFAULT_PARAM = "-t 2 -c 100";	
+	
+	private static final int CLASSES = 2;
+	
+	private static double[][] train = {
+//		NORMALIZED
+//		 {1, -1, 1},
+//		 {1, -0.985765124555, 0.74531835206},
+//		 {1, -0.807829181495, 0.850187265918},
+//		 {2, 0.722419928826, -1},
+//		 {2, 1, 0.970037453184}
+//		UNSCALED
+		{1, 79,  435},
+		{1, 81,  401},
+		{1, 106, 415},
+		{2, 321, 168},
+		{2, 360, 431}
+	};
+	
+	private static double[][] test = {
+//		NORMALIZED
+//		{1, -0.985765124555, 0.962546816479},
+//		{2, 0.722419928826, -0.797752808989}
+//		UNSCALED
+		{1, 81, 430},
+		{2, 321, 195}
+	};
+
+	public static void main(String[] args) {
+		Data data = new Data(train);
+		double[][] normTrain = data.getNormalizedData();
+		double[][] normTest = data.normalizeExternalDataset(test);
+		
+		svm_parameter parameter = Parameter.generate(DEFAULT_PARAM);		
+		
+		svm_problem problem = Problem.generate(parameter, normTrain);
+
+		svm_model model = svm.svm_train(problem, parameter);
+
+		System.out.println("Evaluating...\n");
+		for (int i = 0; i < normTest.length; i++) {
+			System.out.printf("Node %d", i);
+			Classify.evaluate(normTest[i], CLASSES, model);
+		}
+	}
+}

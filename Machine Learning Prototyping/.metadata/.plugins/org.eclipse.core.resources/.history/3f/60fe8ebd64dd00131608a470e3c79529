@@ -1,0 +1,32 @@
+package SVMTools;
+
+public class Data {
+	
+	private double data[][];
+	private int rows;
+	private int cols;
+	
+	private double[] mins;
+	private double[] maxes;
+	
+	public Data(double[][] data) {
+		this.data = data;
+		this.rows = data.length;
+		this.cols = data[0].length;
+		mins = new double[cols];
+		maxes = new double[cols];
+	}
+
+	public double[][] normalize() {
+		setMaxIndex();
+		return null;
+	}
+	
+	private void findMinMax() {
+		for (int i=0; i<rows; i++) {
+			for (int j=0; j<cols; j++) {
+				maxIndexes[j] = Math.max(maxIndexes[j], data[i][j]);
+			}
+		}
+	}
+}
