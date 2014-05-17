@@ -72,6 +72,7 @@ data = [max_low, max_med, ... % Frequency of max signal
         LF_max/avg_low, MF_max/avg_med, ... % Ratio max signal to avg signal
         LF_max/MF_max, HF_max/MF_max, ... % Ratio of range maxes
         mean(LF_wavefft)/mean(MF_wavefft), mean(HF_wavefft)/mean(MF_wavefft), ... % Ratio of range avgs
+        normf_avg_low, normf_avg_med, normf_avg_high % Normalzed frequency average
         wheeze_estimate]; % Quantity of wheezes detected
 end
 

@@ -25,7 +25,6 @@ import libsvm.svm_problem;
  * @author Ryan Lacey <rlacey@mit.edu>
  *
  */
-
 public class Main {
 
 	private static final String DEFAULT_PARAM = "-t 2 -c 100";	

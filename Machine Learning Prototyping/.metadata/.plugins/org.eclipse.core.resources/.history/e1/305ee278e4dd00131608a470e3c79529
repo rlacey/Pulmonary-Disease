@@ -8,24 +8,19 @@ import libsvm.svm_parameter;
 import libsvm.svm_problem;
 
 /**
- * <p>Main class for SVM classification.</p>
+ * Main class for SVM classification
  * 
- * <p>Requires data format {class_label, feature_1, feature_2, feature_3, ...}</p>
+ * Requires data format {class_label, feature_1, feature_2, feature_3, ...}
  * 
- * <p>
- * Features must be aligned between train and test data sets.
- * The same feature extraction methods should be used on both.
- * </p>
+ * Features must be aligned between train and test data sets
+ * ie. The same feature extraction methods should be used on both
  * 
- * <p>
- * reference: http://www.csie.ntu.edu.tw/~cjlin/libsvm/<br>
+ * reference: http://www.csie.ntu.edu.tw/~cjlin/libsvm/
  * reference: https://github.com/arnaudsj/libsvm
- * </p>
  * 
  * @author Ryan Lacey <rlacey@mit.edu>
  *
  */
-
 public class Main {
 
 	private static final String DEFAULT_PARAM = "-t 2 -c 100";	
