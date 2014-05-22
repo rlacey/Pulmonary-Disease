@@ -1,26 +1,64 @@
-% Practical Clinical Skills
-d1 = analyzeLungData('Sounds/vesicular1.wav');
-d3 = analyzeLungData('Sounds/vesicular3.wav');
-d4 = analyzeLungData('Sounds/vesicular4.wav');
-d5 = analyzeLungData('Sounds/vesicular5.m4a');
-d6 = analyzeLungData('Sounds/vesicular6.mp3');
-d7 = analyzeLungData('Sounds/vesicular7.mp3');
-d8 = analyzeLungData('Sounds/vesicular8.wav');
-d9 = analyzeLungData('Sounds/vesicular9.mp3');
-d10 = analyzeLungData('Sounds/wheeze1.wav');
-% d1 = analyzeLungData('Sounds/wheeze3.wav');
-d12 = analyzeLungData('Sounds/wheeze4.wav');
-d13 = analyzeLungData('Sounds/wheeze5.m4a');
-d14 = analyzeLungData('Sounds/wheeze6.mp3');
-% d1 = analyzeLungData('Sounds/wheeze8.mp3');
-% d1 = analyzeLungData('Sounds/wheeze9.wav');
-d16 = analyzeLungData('Sounds/wheeze10.mp3');
-% d1 = analyzeLungData('Sounds/wheeze11.mp3');
-% d1 = analyzeLungData('Sounds/wheeze12.mp3');
-% d1 = analyzeLungData('Sounds/wheeze13.mp3');
+w1 = extractWheezeHighFeatures('Sounds/vesicular1.wav');
+w3 = extractWheezeHighFeatures('Sounds/vesicular3.wav');
+w4 = extractWheezeHighFeatures('Sounds/vesicular4.wav');
+w5 = extractWheezeHighFeatures('Sounds/vesicular5.m4a');
+w6 = extractWheezeHighFeatures('Sounds/vesicular6.mp3');
+w7 = extractWheezeHighFeatures('Sounds/vesicular7.mp3');
+w8 = extractWheezeHighFeatures('Sounds/vesicular8.wav');
+w9 = extractWheezeHighFeatures('Sounds/vesicular9.mp3');
+w10 = extractWheezeHighFeatures('Sounds/wheeze1.wav');
+w12 = extractWheezeHighFeatures('Sounds/wheeze4.wav');
+w13 = extractWheezeHighFeatures('Sounds/wheeze5.m4a');
+w14 = extractWheezeHighFeatures('Sounds/wheeze6.mp3');
+w16 = extractWheezeHighFeatures('Sounds/wheeze10.mp3');
+w17 = extractWheezeHighFeatures('Sounds/wheeze_high1.mp3');
+w18 = extractWheezeHighFeatures('Sounds/wheeze_high2.mp3');
+w19 = extractWheezeHighFeatures('Sounds/wheeze_high3.mp3');
+w20 = extractWheezeHighFeatures('Sounds/crackles1.wav');
+w21 = extractWheezeHighFeatures('Sounds/crackles2.wav');
+w22 = extractWheezeHighFeatures('Sounds/crackles3.wav');
+w23 = extractWheezeHighFeatures('Sounds/crackles4.wav');
+w24 = extractWheezeHighFeatures('Sounds/crackles5.wav');
+w25 = extractWheezeHighFeatures('Sounds/crackles6.mp3');
+w26 = extractWheezeHighFeatures('Sounds/crackles_coarse1.m4a');
+w27 = extractWheezeHighFeatures('Sounds/crackles_coarse2.mp3');
+w28 = extractWheezeHighFeatures('Sounds/crackles_coarse3.mp3');
+w29 = extractWheezeHighFeatures('Sounds/crackles_coarse4.mp3');
+w30 = extractWheezeHighFeatures('Sounds/crackles_coarse5.wav');
+
+outputW = [w1;w3;w4;w5;w6;w7;w8;w9;w10;w12;w13;w14;w16;w17;w18;w19;w20;w21;w22;w23;w24;w25;w26;w27;w28;w29;w30];
+dlmwrite('dataWheeze.txt', outputW, ',');
+
+c1 =  extractCrackleFeatures('Sounds/vesicular1.wav');
+c3 =  extractCrackleFeatures('Sounds/vesicular3.wav');
+c4 =  extractCrackleFeatures('Sounds/vesicular4.wav');
+c5 =  extractCrackleFeatures('Sounds/vesicular5.m4a');
+c6 =  extractCrackleFeatures('Sounds/vesicular6.mp3');
+c7 =  extractCrackleFeatures('Sounds/vesicular7.mp3');
+c8 =  extractCrackleFeatures('Sounds/vesicular8.wav');
+c9 =  extractCrackleFeatures('Sounds/vesicular9.mp3');
+c10 = extractCrackleFeatures('Sounds/wheeze1.wav');
+c12 = extractCrackleFeatures('Sounds/wheeze4.wav');
+c13 = extractCrackleFeatures('Sounds/wheeze5.m4a');
+c14 = extractCrackleFeatures('Sounds/wheeze6.mp3');
+c16 = extractCrackleFeatures('Sounds/wheeze10.mp3');
+c17 = extractCrackleFeatures('Sounds/wheeze_high1.mp3');
+c18 = extractCrackleFeatures('Sounds/wheeze_high2.mp3');
+c19 = extractCrackleFeatures('Sounds/wheeze_high3.mp3');
+c20 = extractCrackleFeatures('Sounds/crackles1.wav');
+c21 = extractCrackleFeatures('Sounds/crackles2.wav');
+c22 = extractCrackleFeatures('Sounds/crackles3.wav');
+c23 = extractCrackleFeatures('Sounds/crackles4.wav');
+c24 = extractCrackleFeatures('Sounds/crackles5.wav');
+c25 = extractCrackleFeatures('Sounds/crackles6.mp3');
+c26 = extractCrackleFeatures('Sounds/crackles_coarse1.m4a');
+c27 = extractCrackleFeatures('Sounds/crackles_coarse2.mp3');
+c28 = extractCrackleFeatures('Sounds/crackles_coarse3.mp3');
+c29 = extractCrackleFeatures('Sounds/crackles_coarse4.mp3');
+c30 = extractCrackleFeatures('Sounds/crackles_coarse5.wav');
 
 
+outputC = [c1;c3;c4;c5;c6;c7;c8;c9;c10;c12;c13;c14;c16;c17;c18;c19;c20;c21;c22;c23;c24;c25;c26;c27;c28;c29;c30];
+dlmwrite('dataCrackle.txt', outputC, ',');
 
-output = [d1;d3;d4;d5;d6;d7;d8;d9;d10;d12;d13;d14;d16];%;d17;d18;d19;d20;d21;d22;d23;d24;d25;d26;d27;d28;d29];
-dlmwrite('data.out', output, ',');
 done = 1

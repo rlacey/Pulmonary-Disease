@@ -25,4 +25,5 @@
 <fullyQualifiedTypeName name="java.io.FileOutputStream"/>
 <fullyQualifiedTypeName name="java.io.IOException"/>
 <fullyQualifiedTypeName name="SVMTools.svm_scale"/>
+<fullyQualifiedTypeName name="SVMTools.Data"/>
 </qualifiedTypeNameHistroy>

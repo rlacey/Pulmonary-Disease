@@ -10,7 +10,7 @@ function [ count ] = CountWheezes( wave, t, fs )
 
         n_c = length(wave_c) - 1;
         f_tmp = 0:fs/n_c:fs;
-        cuttoff_indexes = find(f_tmp>100 & f_tmp<600);
+        cuttoff_indexes = find(f_tmp>250 & f_tmp<600);
         f_c = f_tmp(cuttoff_indexes);
         wavefft_tmp = abs(fft(wave_c));
         wavefft_c = wavefft_tmp(cuttoff_indexes);
@@ -35,11 +35,14 @@ function [ count ] = CountWheezes( wave, t, fs )
         max_val = max_val(1);
         pk_over_threshold = f_c(wavefft_c == max(wavefft_c)) > 200;
         pk_over_threshold = pk_over_threshold(1);
-        if (pk_over_threshold) && (low_val/max_val<0.2) && (high_val/max_val<0.2)
+        if (pk_over_threshold) && (low_val/max_val<0.15) && (high_val/max_val<0.15)
             count = count + 1;
+            % VIEW PLOT OF WHEEZE THRESHOLDS
 %             low_val/max_val
 %             high_val/max_val
-%             plot(f_c, wavefft_c, f_c, smoothed_fft);
+%             ind = find(smoothed_fft == min(smoothed_fft(low_idx:max_idx)));
+%             ind2 = find(smoothed_fft == min(smoothed_fft(max_idx:high_idx)));
+%             plot(f_c, wavefft_c, f_c, smoothed_fft, f_c(ind), smoothed_fft(ind), 'ro', f_c(ind2), smoothed_fft(ind2), 'ro');
 %             break
         end
     end  

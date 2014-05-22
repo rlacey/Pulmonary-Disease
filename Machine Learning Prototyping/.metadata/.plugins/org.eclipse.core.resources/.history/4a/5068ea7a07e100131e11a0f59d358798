@@ -1,0 +1,90 @@
+import SVMTools.Classify;
+import SVMTools.Data;
+import SVMTools.Parameter;
+import SVMTools.Problem;
+import libsvm.svm;
+import libsvm.svm_model;
+import libsvm.svm_parameter;
+import libsvm.svm_problem;
+
+/**
+ * <p>Main class for SVM classification.</p>
+ * 
+ * <p>Requires data format {class_label, feature_1, feature_2, feature_3, ...}</p>
+ * 
+ * <p>
+ * Features must be aligned between train and test data sets.
+ * The same feature extraction methods should be used on both.
+ * </p>
+ * 
+ * <p>
+ * reference: http://www.csie.ntu.edu.tw/~cjlin/libsvm/<br>
+ * reference: https://github.com/arnaudsj/libsvm
+ * </p>
+ * 
+ * @author Ryan Lacey <rlacey@mit.edu>
+ *
+ */
+
+public class Main {
+
+	private static final String DEFAULT_PARAM = "-t 2 -c 100";	
+	
+	private static final int CLASSES = 2;
+	
+	private static double[][] trainWheeze = {
+		{-1, 209.12,4.9141,7.9675,0.092287,0.52947,0.20349,0.43119,0},
+		{-1, 206.94,4.2234,2.4065,0.039705,0.65566,0.23678,0.22633,0},
+		{-1, 225.05,4.1762,6.7384,0.14758,0.74923,0.23945,0.57267,0},
+		{-1, 274.54,3.8604,2.1826,0.055627,0.49836,0.25904,0.40872,0},
+		{-1, 261.69,5.0039,1.3714,0.046449,0.40348,0.19985,0.11718,0},
+		{-1, 224.94,6.2432,6.1529,0.28332,0.66674,0.16017,0.79685,0},
+		{-1, 224.99,6.6792,6.5363,0.14467,0.67169,0.14972,0.62646,0},
+		{-1, 261.69,5.0039,1.3714,0.046449,0.40348,0.19985,0.11718,0},
+		{1, 409.22,4.6398,1.9524,0.065971,0.62398,0.21553,0.16584,8},
+		{1, 337.43,3.1482,0.76219,0.042433,0.62854,0.31764,0.19662,2},
+		{1, 202.76,3.027,1.9264,0.076888,0.57566,0.33036,0.30066,3},
+		{1, 409.16,4.685,2.0432,0.070091,0.6209,0.21345,0.19675,7},
+		{1, 275.91,13.378,0.5712,0.016768,0.46397,0.074752,0.12508,10},
+//		{1, 200.09,8.2873,3.5237,0.010166,0.42523,0.12067,0.25965,8},
+		{1, 200.04,8.9696,3.8818,0.046006,0.43065,0.11149,0.7868,8},
+		{1, 332.51,7.6277,2.2412,0.10475,0.59926,0.1311,0.29567,14},
+		{-1, 205.35,3.402,4.7873,0.12612,0.63126,0.29394,0.35894,0},
+		{-1, 200.01,2.2272,2.2159,0.27079,0.69011,0.449,0.29522,0},
+		{-1, 243.41,1.9151,1.3801,0.2202,0.75577,0.52216,0.23528,0},
+		{-1, 205.35,3.402,4.7873,0.12612,0.63126,0.29394,0.35894,0},
+		{-1, 221.28,3.6437,1.8659,0.048392,0.48148,0.27445,0.19765,0},
+		{-1, 200.06,2.5484,2.695,0.17604,0.69525,0.3924,0.27772,0},
+		{-1, 201.59,4.646,4.0542,0.11421,0.78628,0.21524,0.38985,0},
+		{-1, 752.82,2.7569,0.15582,0.91384,0.60332,0.36273,0.28698,1},
+		{-1, 200.03,3.5494,2.2267,0.13092,0.57261,0.28174,0.44974,0},
+		{-1, 752.82,2.7569,0.15582,0.91384,0.60332,0.36273,0.28698,1},
+		{-1, 301.86,3.8949,2.3921,0.11894,0.56771,0.25675,0.7141,0}
+	};
+	
+	private static double[][] testWheeze = {
+		{1, 200.09,8.2873,3.5237,0.010166,0.42523,0.12067,0.25965,8},
+	};
+	
+	private static void run(double[][] trainData, double[][] testData, String soundtype) {
+		Data data = new Data(trainData);
+		double[][] normTrain = data.getNormalizedData();
+		double[][] normTest = data.normalizeExternalDataset(testData);
+		
+		svm_parameter parameter = Parameter.generate(DEFAULT_PARAM);		
+		
+		svm_problem problem = Problem.generate(parameter, normTrain);
+
+		svm_model model = svm.svm_train(problem, parameter);
+
+		System.out.println("\nEvaluating "+soundtype);
+		for (int i = 0; i < normTest.length; i++) {
+			System.out.printf("Node %d", i);
+			Classify.evaluate(normTest[i], CLASSES, model);
+		}
+	}
+
+	public static void main(String[] args) {
+		run(trainWheeze, testWheeze, "Wheeze");
+	}
+}

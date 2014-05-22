@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 import libsvm.svm_parameter;
 
 public class Parameter {
-	
+
 	public static svm_parameter generate(String args) {
 		svm_parameter param = new svm_parameter();
 
@@ -13,10 +13,10 @@ public class Parameter {
 		param.svm_type = svm_parameter.C_SVC;
 		param.kernel_type = svm_parameter.RBF;
 		param.degree = 3;
-		param.gamma = 0;
+		// param.gamma = 0;
 		param.coef0 = 0;
 		param.nu = 0.5;
-		param.cache_size = 40;
+		param.cache_size = 100;
 		param.C = 1;
 		param.eps = 1e-3;
 		param.p = 0.1;
@@ -102,7 +102,7 @@ public class Parameter {
 		}
 		return param;
 	}
-	
+
 	private static double atof(String s) {
 		return Double.valueOf(s).doubleValue();
 	}

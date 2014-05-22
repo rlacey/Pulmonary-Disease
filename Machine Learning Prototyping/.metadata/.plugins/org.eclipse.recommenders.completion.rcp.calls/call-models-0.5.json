@@ -18,5 +18,10 @@
     "location": "M:\\School\\6.UAP\\Code\\libsvm-3.18\\libsvm-3.18\\java\\libsvm.jar",
     "status": "UNRESOLVED",
     "error": "No call model found for \u0027M:\\School\\6.UAP\\Code\\libsvm-3.18\\libsvm-3.18\\java\\libsvm.jar\u0027. Neither fingerprint \u00271e6bffcf750c37c5b061d47d4bdece2dc94777ba\u0027 nor symbolic name \u0027libsvm\u0027 are known."
+  },
+  "M:\\School\\6.UAP\\Code\\Machine Learning Prototyping\\PulmonaryDisease\\src": {
+    "location": "M:\\School\\6.UAP\\Code\\Machine Learning Prototyping\\PulmonaryDisease\\src",
+    "status": "UNRESOLVED",
+    "error": "No class path info available for \u0027M:\\School\\6.UAP\\Code\\Machine Learning Prototyping\\PulmonaryDisease\\src\u0027. Skipped."
   }
 }
